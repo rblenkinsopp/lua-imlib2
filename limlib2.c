@@ -44,8 +44,7 @@ static int push_load_error_str(lua_State *L, Imlib_Load_Error err, const char *f
 
 static Imlib_Color *push_Color(lua_State *L) {
   Imlib_Color *c = (Imlib_Color*)lua_newuserdata(L, sizeof(Imlib_Color));
-  luaL_getmetatable(L, "imlib2.color");
-  lua_setmetatable(L, -2);
+  luaL_setmetatable(L, "imlib2.color");
   return c;
 }
 
@@ -57,13 +56,13 @@ static int color_new(lua_State *L) {
   Imlib_Color *c;
   int i;
   int args[4];
-  args[0]=luaL_checkint(L, 1); /* red */
-  args[1]=luaL_checkint(L, 2); /* green */
-  args[2]=luaL_checkint(L, 3); /* blue */
-  args[3]=luaL_optint(L, 4, 255); /* alpha */
+  args[0]=luaL_checkinteger(L, 1); /* red */
+  args[1]=luaL_checkinteger(L, 2); /* green */
+  args[2]=luaL_checkinteger(L, 3); /* blue */
+  args[3]=luaL_optinteger(L, 4, 255); /* alpha */
   for (i=0; i<4; i++)
     luaL_argcheck(L, args[i] >= 0 && args[i] <= 255, i+1, "values must be >= 0 and <= 255");
-  
+
   c = push_Color(L);
   c->red=args[0];
   c->green=args[1];
@@ -108,7 +107,7 @@ static int colorm__index(lua_State *L) {
 static int colorm__newindex(lua_State *L) {
   Imlib_Color *c = check_color(L, 1);
   const char *field = luaL_checkstring(L, 2);
-  int val = luaL_checkint(L, 3);
+  int val = luaL_checkinteger(L, 3);
   luaL_argcheck(L, val >= 0 && val <= 255, 3, "values must be >= 0 and <= 255");
 
   if (strcmp(field, "red") == 0)
@@ -127,18 +126,17 @@ static int colorm__newindex(lua_State *L) {
 
 static Imlib_Border *push_Border(lua_State *L) {
   Imlib_Border *b = (Imlib_Border*)lua_newuserdata(L, sizeof(Imlib_Border));
-  luaL_getmetatable(L, "imlib2.border");
-  lua_setmetatable(L, -2);
+  luaL_setmetatable(L, "imlib2.border");
   return b;
 }
 
 /* border.new(left, top, right, bottom) */
 static int border_new(lua_State *L) {
   Imlib_Border *b;
-  int left=luaL_checkint(L, 1);
-  int top=luaL_checkint(L,2);
-  int right=luaL_checkint(L,3);
-  int bottom=luaL_checkint(L,4);
+  int left=luaL_checkinteger(L, 1);
+  int top=luaL_checkinteger(L,2);
+  int right=luaL_checkinteger(L,3);
+  int bottom=luaL_checkinteger(L,4);
 
   b = push_Border(L);
   b->left=left;
@@ -184,7 +182,7 @@ static int borderm__index(lua_State *L) {
 static int borderm__newindex(lua_State *L) {
   Imlib_Border *b = check_border(L, 1);
   const char *field = luaL_checkstring(L, 2);
-  int val = luaL_checkint(L, 3);
+  int val = luaL_checkinteger(L, 3);
 
   if(strcmp(field, "left") == 0)
     b->left = val;
@@ -203,8 +201,7 @@ static int borderm__newindex(lua_State *L) {
 static Gradient push_Gradient(lua_State *L, Gradient gr) {
   Gradient *grp = (Gradient*)lua_newuserdata(L, sizeof(Gradient));
   *grp = gr;
-  luaL_getmetatable(L, "imlib2.gradient");
-  lua_setmetatable(L, -2);
+  luaL_setmetatable(L, "imlib2.gradient");
   return gr;
 }
 
@@ -250,7 +247,7 @@ static int gradientm_tostring(lua_State *L) {
 /* grad:add_color(offset, color) */
 static int gradientm_add_color(lua_State *L) {
   Gradient gr = check_Gradient(L, 1);
-  int offset = luaL_checkint(L, 2);
+  int offset = luaL_checkinteger(L, 2);
   imlib_context_set_color_range(gr);
   Imlib_Color *c = check_color(L, 3);
   set_color(c);
@@ -263,8 +260,7 @@ static int gradientm_add_color(lua_State *L) {
 static Polygon push_Polygon(lua_State *L, Polygon po) {
   Polygon *pop = (Polygon*)lua_newuserdata(L, sizeof(Polygon));
   *pop = po;
-  luaL_getmetatable(L, "imlib2.polygon");
-  lua_setmetatable(L, -2);
+  luaL_setmetatable(L, "imlib2.polygon");
   return po;
 }
 
@@ -308,8 +304,8 @@ static int polygonm_tostring(lua_State *L) {
 /* poly:add_points(x, y) */
 static int polygonm_add_point(lua_State *L) {
   Polygon po = check_Polygon(L, 1);
-  int x = luaL_checkint(L, 2);
-  int y = luaL_checkint(L, 3);
+  int x = luaL_checkinteger(L, 2);
+  int y = luaL_checkinteger(L, 3);
   imlib_polygon_add_point(po, x, y);
   return 0;
 }
@@ -328,8 +324,8 @@ static int polygonm_get_bounds(lua_State *L) {
 /* poly:contains_point() */
 static int polygonm_contains_point(lua_State *L) {
   Polygon po = check_Polygon(L, 1);
-  int x = luaL_checkint(L, 2);
-  int y = luaL_checkint(L, 3);
+  int x = luaL_checkinteger(L, 2);
+  int y = luaL_checkinteger(L, 3);
   lua_pushboolean(L, imlib_polygon_contains_point(po, x, y));
   return 1;
 }
@@ -339,8 +335,7 @@ static int polygonm_contains_point(lua_State *L) {
 static Font push_Font(lua_State *L, Font fo) {
   Font *fop = (Font*)lua_newuserdata(L, sizeof(Font));
   *fop = fo;
-  luaL_getmetatable(L, "imlib2.font");
-  lua_setmetatable(L, -2);
+  luaL_setmetatable(L, "imlib2.font");
   return fo;
 }
 
@@ -418,7 +413,7 @@ static int font_get_cache_size(lua_State *L) {
 
 /* font.set_cache_size() */
 static int font_set_cache_size(lua_State *L) {
-  int size = luaL_checkint(L, 1);
+  int size = luaL_checkinteger(L, 1);
 
   imlib_set_font_cache_size(size);
   return 0;
@@ -505,7 +500,7 @@ static int fontm_get_advance(lua_State *L) {
 /* fnt:get_inset(str) */
 static int fontm_get_inset(lua_State *L) {
   Font fo = check_Font(L, 1);
-  
+
   imlib_context_set_font(fo);
   lua_pushinteger(L, imlib_get_text_inset(luaL_checkstring(L, 2)));
   return 1;
@@ -554,8 +549,7 @@ static int fontm_get_maximum_descent(lua_State *L) {
 static Image push_Image(lua_State *L, Image im) {
   Image *imp = (Image*)lua_newuserdata(L, sizeof(Image));
   *imp = im;
-  luaL_getmetatable(L, "imlib2.image");
-  lua_setmetatable(L, -2);
+  luaL_setmetatable(L, "imlib2.image");
   return im;
 }
 
@@ -570,8 +564,8 @@ static Image check_Image(lua_State *L, int n) {
 
 /* image.new(width, height) */
 static int image_new(lua_State *L) {
-  int w = luaL_checkint(L, 1);
-  int h = luaL_checkint(L, 2);
+  int w = luaL_checkinteger(L, 1);
+  int h = luaL_checkinteger(L, 2);
 
   Image im = push_Image(L, imlib_create_image(w, h));
   if (im == NULL)
@@ -710,15 +704,15 @@ static int imagem_set_border(lua_State *L) {
 /* img:get_pixel(x, y) */
 static int imagem_get_pixel(lua_State *L) {
   Image im = check_Image(L, 1);
-  int x = luaL_checkint(L, 2);
-  int y = luaL_checkint(L, 3);
+  int x = luaL_checkinteger(L, 2);
+  int y = luaL_checkinteger(L, 3);
   Imlib_Color *c = push_Color(L);
   imlib_context_set_image(im);
   imlib_image_query_pixel(x, y, c);
   return 1;
 }
 
-/*** imlib2.image metamethods which wrap functions that return copies (but are  
+/*** imlib2.image metamethods which wrap functions that return copies (but are
  * written to change self, to fit in with the rest of the api
  ***/
 
@@ -726,10 +720,10 @@ static int imagem_get_pixel(lua_State *L) {
 static int imagem_crop(lua_State *L) {
   Image *imp = (Image*)luaL_checkudata(L, 1, "imlib2.image");
   Image old_im;
-  int x = luaL_checkint(L, 2);
-  int y = luaL_checkint(L, 3);
-  int w = luaL_checkint(L, 4);
-  int h = luaL_checkint(L, 5);
+  int x = luaL_checkinteger(L, 2);
+  int y = luaL_checkinteger(L, 3);
+  int w = luaL_checkinteger(L, 4);
+  int h = luaL_checkinteger(L, 5);
 
   old_im = *imp;
   imlib_context_set_image(old_im);
@@ -743,12 +737,12 @@ static int imagem_crop(lua_State *L) {
 static int imagem_crop_and_scale(lua_State *L) {
   Image *imp = (Image*)luaL_checkudata(L, 1, "imlib2.image");
   Image old_im;
-  int source_x = luaL_checkint(L, 2);
-  int source_y = luaL_checkint(L, 3);
-  int w = luaL_checkint(L, 4);
-  int h = luaL_checkint(L, 5);
-  int dest_w = luaL_checkint(L, 6);
-  int dest_h = luaL_checkint(L, 7);
+  int source_x = luaL_checkinteger(L, 2);
+  int source_y = luaL_checkinteger(L, 3);
+  int w = luaL_checkinteger(L, 4);
+  int h = luaL_checkinteger(L, 5);
+  int dest_w = luaL_checkinteger(L, 6);
+  int dest_h = luaL_checkinteger(L, 7);
 
   old_im = *imp;
   imlib_context_set_image(old_im);
@@ -806,15 +800,15 @@ static int imagem_flip_diagonal(lua_State *L) {
 static int imagem_orientate(lua_State *L) {
   Image im = check_Image(L, 1);
   imlib_context_set_image(im);
-  imlib_image_orientate(luaL_checkint(L,2));
+  imlib_image_orientate(luaL_checkinteger(L,2));
   return 1;
 }
 
-/* img:blue(radius) */
+/* img:blur(radius) */
 static int imagem_blur(lua_State *L) {
   Image im = check_Image(L, 1);
   imlib_context_set_image(im);
-  imlib_image_blur(luaL_checkint(L,2));
+  imlib_image_blur(luaL_checkinteger(L,2));
   return 1;
 }
 
@@ -822,7 +816,7 @@ static int imagem_blur(lua_State *L) {
 static int imagem_sharpen(lua_State *L) {
   Image im = check_Image(L, 1);
   imlib_context_set_image(im);
-  imlib_image_sharpen(luaL_checkint(L,2));
+  imlib_image_sharpen(luaL_checkinteger(L,2));
   return 1;
 }
 
@@ -863,8 +857,8 @@ static int imagem_clear(lua_State *L) {
 static int imagem_draw_pixel(lua_State *L) {
   Image im = check_Image(L, 1);
   imlib_context_set_image(im);
-  int x = luaL_checkint(L, 2);
-  int y = luaL_checkint(L, 3);
+  int x = luaL_checkinteger(L, 2);
+  int y = luaL_checkinteger(L, 3);
   if (lua_gettop(L)>=4) { /* given a colour */
     Imlib_Color *c = (Imlib_Color*)luaL_checkudata(L, 4, "imlib2.color");
     set_color(c);
@@ -877,10 +871,10 @@ static int imagem_draw_pixel(lua_State *L) {
 static int imagem_draw_line(lua_State *L) {
   Image im = check_Image(L, 1);
   imlib_context_set_image(im);
-  int x1 = luaL_checkint(L, 2);
-  int y1 = luaL_checkint(L, 3);
-  int x2 = luaL_checkint(L, 4);
-  int y2 = luaL_checkint(L, 5);
+  int x1 = luaL_checkinteger(L, 2);
+  int y1 = luaL_checkinteger(L, 3);
+  int x2 = luaL_checkinteger(L, 4);
+  int y2 = luaL_checkinteger(L, 5);
   if (lua_gettop(L)>=6) /* Given a color */ {
     Imlib_Color *c = (Imlib_Color*)luaL_checkudata(L, 6, "imlib2.color");
     set_color(c);
@@ -893,10 +887,10 @@ static int imagem_draw_line(lua_State *L) {
 static int imagem_draw_rectangle(lua_State *L) {
   Image im = check_Image(L, 1);
   imlib_context_set_image(im);
-  int x = luaL_checkint(L, 2);
-  int y = luaL_checkint(L, 3);
-  int width = luaL_checkint(L, 4);
-  int height = luaL_checkint(L, 5);
+  int x = luaL_checkinteger(L, 2);
+  int y = luaL_checkinteger(L, 3);
+  int width = luaL_checkinteger(L, 4);
+  int height = luaL_checkinteger(L, 5);
   if (lua_gettop(L)>=6) { /* given a colour */
     Imlib_Color *c = (Imlib_Color*)luaL_checkudata(L, 6, "imlib2.color");
     set_color(c);
@@ -909,10 +903,10 @@ static int imagem_draw_rectangle(lua_State *L) {
 static int imagem_fill_rectangle(lua_State *L) {
   Image im = check_Image(L, 1);
   imlib_context_set_image(im);
-  int x = luaL_checkint(L, 2);
-  int y = luaL_checkint(L, 3);
-  int width = luaL_checkint(L, 4);
-  int height = luaL_checkint(L, 5);
+  int x = luaL_checkinteger(L, 2);
+  int y = luaL_checkinteger(L, 3);
+  int width = luaL_checkinteger(L, 4);
+  int height = luaL_checkinteger(L, 5);
   if (lua_gettop(L)>=6) { /* given a colour */
     Imlib_Color *c = (Imlib_Color*)luaL_checkudata(L, 6, "imlib2.color");
     set_color(c);
@@ -928,12 +922,12 @@ static int imagem_fill_rectangle(lua_State *L) {
 static int imagem_scroll_rectangle(lua_State *L) {
   Image im = check_Image(L, 1);
   imlib_context_set_image(im);
-  int x = luaL_checkint(L, 2);
-  int y = luaL_checkint(L, 3);
-  int width = luaL_checkint(L, 4);
-  int height = luaL_checkint(L, 5);
-  int dx = luaL_checkint(L, 6);
-  int dy = luaL_checkint(L, 7);
+  int x = luaL_checkinteger(L, 2);
+  int y = luaL_checkinteger(L, 3);
+  int width = luaL_checkinteger(L, 4);
+  int height = luaL_checkinteger(L, 5);
+  int dx = luaL_checkinteger(L, 6);
+  int dy = luaL_checkinteger(L, 7);
   imlib_image_scroll_rect(x, y, width, height, dx, dy);
   return 0;
 }
@@ -942,12 +936,12 @@ static int imagem_scroll_rectangle(lua_State *L) {
 static int imagem_copy_rectangle(lua_State *L) {
   Image im = check_Image(L, 1);
   imlib_context_set_image(im);
-  int x = luaL_checkint(L, 2);
-  int y = luaL_checkint(L, 3);
-  int width = luaL_checkint(L, 4);
-  int height = luaL_checkint(L, 5);
-  int dest_x = luaL_checkint(L, 6);
-  int dest_y = luaL_checkint(L, 7);
+  int x = luaL_checkinteger(L, 2);
+  int y = luaL_checkinteger(L, 3);
+  int width = luaL_checkinteger(L, 4);
+  int height = luaL_checkinteger(L, 5);
+  int dest_x = luaL_checkinteger(L, 6);
+  int dest_y = luaL_checkinteger(L, 7);
   imlib_image_copy_rect(x, y, width, height, dest_x, dest_y);
   return 0;
 }
@@ -956,10 +950,10 @@ static int imagem_copy_rectangle(lua_State *L) {
 static int imagem_fill_gradient(lua_State *L) {
   Image im = check_Image(L, 1);
   Gradient gr = check_Gradient(L, 2);
-  int x = luaL_checkint(L, 3);
-  int y = luaL_checkint(L, 4);
-  int width = luaL_checkint(L, 5);
-  int height = luaL_checkint(L, 6);
+  int x = luaL_checkinteger(L, 3);
+  int y = luaL_checkinteger(L, 4);
+  int width = luaL_checkinteger(L, 5);
+  int height = luaL_checkinteger(L, 6);
   double angle = luaL_optnumber(L, 7, 0.0);
 
   imlib_context_set_image(im);
@@ -972,10 +966,10 @@ static int imagem_fill_gradient(lua_State *L) {
 static int imagem_draw_ellipse(lua_State *L) {
   Image im = check_Image(L, 1);
   imlib_context_set_image(im);
-  int xc = luaL_checkint(L, 2);
-  int yc = luaL_checkint(L, 3);
-  int a = luaL_checkint(L, 4); /* Horizontal amplitude */
-  int b = luaL_checkint(L, 5); /* Vertical amplitude */
+  int xc = luaL_checkinteger(L, 2);
+  int yc = luaL_checkinteger(L, 3);
+  int a = luaL_checkinteger(L, 4); /* Horizontal amplitude */
+  int b = luaL_checkinteger(L, 5); /* Vertical amplitude */
   if (lua_gettop(L)>=6) { /* given a colour */
     Imlib_Color *c = (Imlib_Color*)luaL_checkudata(L, 6, "imlib2.color");
     set_color(c);
@@ -989,10 +983,10 @@ static int imagem_fill_ellipse(lua_State *L)
 {
   Image im = check_Image(L, 1);
   imlib_context_set_image(im);
-  int xc = luaL_checkint(L, 2);
-  int yc = luaL_checkint(L, 3);
-  int a = luaL_checkint(L, 4); /* Horizontal amplitude */
-  int b = luaL_checkint(L, 5); /* Vertical amplitude */
+  int xc = luaL_checkinteger(L, 2);
+  int yc = luaL_checkinteger(L, 3);
+  int a = luaL_checkinteger(L, 4); /* Horizontal amplitude */
+  int b = luaL_checkinteger(L, 5); /* Vertical amplitude */
   if (lua_gettop(L)>=6) { /* given a colour */
     Imlib_Color *c = (Imlib_Color*)luaL_checkudata(L, 6, "imlib2.color");
     set_color(c);
@@ -1033,8 +1027,8 @@ static int imagem_draw_text(lua_State *L) {
   Image im = check_Image(L, 1);
   Font fo = check_Font(L, 2);
   const char *str = luaL_checkstring(L, 3);
-  int x = luaL_checkint(L, 4);
-  int y = luaL_checkint(L, 5);
+  int x = luaL_checkinteger(L, 4);
+  int y = luaL_checkinteger(L, 5);
   Imlib_Color *c =  (Imlib_Color*)luaL_checkudata(L, 6, "imlib2.color");
   int i;
   int r[] = {0,0,0,0};
@@ -1091,7 +1085,7 @@ static int get_cache_size(lua_State *L) {
 
 /* imlib2.set_cache_size(size) */
 static int set_cache_size(lua_State *L) {
-  imlib_set_cache_size(luaL_checkint(L, 1));
+  imlib_set_cache_size(luaL_checkinteger(L, 1));
   return 1;
 }
 
@@ -1245,43 +1239,53 @@ static const struct luaL_Reg f [] = {
 int luaopen_limlib2(lua_State *L) {
   imlib_context_set_anti_alias(1); /* Ensure anti-alias by default */
 
+  lua_newtable(L);
+  lua_pushvalue(L, -1);
+  lua_setglobal(L, "imlib2");
+
+  /* Border */
   luaL_newmetatable(L, "imlib2.border");
-  lua_pushvalue(L, -1);
-  lua_setfield(L, -2, "__index");
-  luaL_register(L, NULL, border_m);
-  luaL_register(L, "imlib2.border", border_f);
+  luaL_setfuncs(L, border_m, 0);
+  lua_pop(L, 1);
+  luaL_newlib(L, border_f);
+  lua_setfield(L, -2, "border");
 
+  /* Color */
   luaL_newmetatable(L, "imlib2.color");
-  lua_pushvalue(L, -1);
-  lua_setfield(L, -2, "__index");
-  luaL_register(L, NULL, color_m);
-  luaL_register(L, "imlib2.color", color_f);
+  luaL_setfuncs(L, color_m, 0);
+  lua_pop(L, 1);
+  luaL_newlib(L, color_f);
+  lua_setfield(L, -2, "color");
 
+  /* Gradient */
   luaL_newmetatable(L, "imlib2.gradient");
-  lua_pushvalue(L, -1);
-  lua_setfield(L, -2, "__index");
-  luaL_register(L, NULL, gradient_m);
-  luaL_register(L, "imlib2.gradient", gradient_f);
+  luaL_setfuncs(L, gradient_m, 0);
+  lua_setfield(L, -1, "__index");
+  luaL_newlib(L, gradient_f);
+  lua_setfield(L, -2, "gradient");
 
+  /* Polygon */
   luaL_newmetatable(L, "imlib2.polygon");
-  lua_pushvalue(L, -1);
-  lua_setfield(L, -2, "__index");
-  luaL_register(L, NULL, polygon_m);
-  luaL_register(L, "imlib2.polygon", polygon_f);
+  luaL_setfuncs(L, polygon_m, 0);
+  lua_setfield(L, -1, "__index");
+  luaL_newlib(L, polygon_f);
+  lua_setfield(L, -2, "gradient");
 
+  /* Font */
   luaL_newmetatable(L, "imlib2.font");
-  lua_pushvalue(L, -1);
-  lua_setfield(L, -2, "__index");
-  luaL_register(L, NULL, font_m);
-  luaL_register(L, "imlib2.font", font_f);
+  luaL_setfuncs(L, font_m, 0);
+  lua_setfield(L, -1, "__index");
+  luaL_newlib(L, font_f);
+  lua_setfield(L, -2, "font");
 
+  /* Image */
   luaL_newmetatable(L, "imlib2.image");
-  lua_pushvalue(L, -1);
-  lua_setfield(L, -2, "__index");
-  luaL_register(L, NULL, image_m);
-  luaL_register(L, "imlib2.image", image_f);
+  luaL_setfuncs(L, image_m, 0);
+  lua_setfield(L, -1, "__index");
+  luaL_newlib(L, image_f);
+  lua_setfield(L, -2, "image");
 
-  luaL_register(L, "imlib2", f);
+  luaL_setfuncs(L, f, 0);
 
   return 1;
 }
