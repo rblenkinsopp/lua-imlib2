@@ -1,7 +1,7 @@
 package="lua-imlib2"
 version="dev-2"
 source = {
-   url = "",
+   url = "https://github.com/rblenkinsopp/lua-imlib2.git",
 }
 description = {
    summary  = "A binding to the imlib2 image manipulation library",
