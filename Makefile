@@ -1,8 +1,8 @@
 # change these to reflect your Lua installation
-LUA= /usr/local
-LUAINC= $(LUA)/include
-LUALIB= $(LUA)/lib
-LUABIN= $(LUA)/bin
+LUA    ?= /usr
+LUAINC ?= $(LUA)/usr/include
+LUALIB ?= $(LUA)/lib
+LUABIN ?= $(LUA)/bin
 
 # no need to change anything below here
 CFLAGS= $(INCS) $(DEFS) $(WARN) -O2 -fPIC
