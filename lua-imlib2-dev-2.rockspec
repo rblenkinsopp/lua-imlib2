@@ -1,15 +1,15 @@
 package="lua-imlib2"
-version="dev-1"
+version="dev-2"
 source = {
    url = "",
 }
 description = {
-   summary = "A binding to the imlib2 image manipulation library",
-   homepage = "http://asbradbury.org/projects/lua-imlib2/",
-   license = "MIT/X11"
+   summary  = "A binding to the imlib2 image manipulation library",
+   homepage = "https://github.com/rblenkinsopp/lua-imlib2",
+   license  = "MIT/X11"
 }
 dependencies = {
-   "lua >= 5.1"
+   "lua >= 5.2"
 }
 external_dependencies = {
    IMLIB2 = {

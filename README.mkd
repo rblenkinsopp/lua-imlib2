@@ -9,18 +9,19 @@ any problems or have any suggestions (or patches) then please contact me.
 
 ## Links
 * [Home](http://asbradbury.org/projects/lua-imlib2/)
-* [Download](http://luaforge.net/projects/lua-imlib2/)
 * [Documentation](http://asbradbury.org/projects/lua-imlib2/doc/)
-* [Source](http://github.com/asb/lua-imlib2/)
+* [Source](https://github.com/rblenkinsopp/lua-imlib2)
 
 ## Release history
+* lau-imlib2-0.2 (2017-07-15)
+  * Ported to lua 5.2/5.3
 * lua-imlib2-0.1 (2008-01-22)
-  * first public release
+  * First public release
 
 ## License
 lua-imlib2 is distributed under the MIT license.
 
-    Copyright (c) 2007-2008 A.S. Bradbury
+    Copyright (c) 2007-2008 A.S. Bradbury, Webmaster Sheets, Robert Blenkinsopp
 
     Permission is hereby granted, free of charge, to any person
     obtaining a copy of this software and associated documentation
@@ -43,7 +44,14 @@ lua-imlib2 is distributed under the MIT license.
     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     OTHER DEALINGS IN THE SOFTWARE.
 
-## Contact
+## Authors
+Author: Robert Blenkinsopp
+Homepage: <https://github.com/rblenkinsopp>
+
+Author: Webmaster Sheets
+Homepage: <https://github.com/Web-eWorks>
+
+## Origal Author
 Author: A.S. Bradbury  
 Email: <asb@asbradbury.org>  
 Homepage: <http://asbradbury.org/>
